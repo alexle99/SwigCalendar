@@ -11,10 +11,11 @@ class Event {
     private ArrayList<String> guests;
     private Boolean repeat;
 
-    public Event(String n, String startT, String endT) {
+    // public Event(String n, String startT, String endT) {
+    public Event(String n) {
         name = n;
-        startTime = startT;
-        endTime = endT;
+        startTime = "yyyy-mm-dd hh:mm:ss";
+        endTime = "yyyy-mm-dd hh:mm:ss";
         guests = new ArrayList<String>();
         repeat = false;
     }
