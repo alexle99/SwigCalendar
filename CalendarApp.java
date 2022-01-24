@@ -17,11 +17,11 @@ import java.util.*;
 
 public class CalendarApp {
 
-    private HashMap<String, ArrayList<Calendar>> userDict;
-    private String currentUser;
-    private String currentCalendar;
-    // private User currentUser;
-    // private Calendar currentCalendar;
+    private HashMap<User, ArrayList<Calendar>> userDict;
+    // private String currentUser;
+    // private String currentCalendar;
+    private User currentUser;
+    private Calendar currentCalendar;
 
     private static final String CMD_PROMPT = String.join("\n",
             "\n----------------------------------",
@@ -35,24 +35,19 @@ public class CalendarApp {
     private String cmd;
 
     public CalendarApp() {
-        userDict = new HashMap<String, ArrayList<Calendar>>();
-        currentUser = "";
-        currentCalendar = "";
+        userDict = new HashMap<User, ArrayList<Calendar>>();
+        currentUser = null;
+        currentCalendar = null;
     }
 
     public void run() {
-
         Boolean loop = true;
         while (loop) {
-
             String input = getInput();
-
             if (input.length() == 0) { // break out of input loop
                 break;
             }
-
             cmd = input.substring(0, 1);
-
             switch (cmd) {
                 case "1":
                     logIn(input);
@@ -89,57 +84,53 @@ public class CalendarApp {
         return input;
     }
 
-    private Calendar getCalendar(String name) {
-        for (String u : userDict.keySet()) {
-            for (Calendar c : userDict.get(u)) {
-                if (c.getName() == currentCalendar) {
-                    return c;
-                }
-            }
-        }
-        return null;
-    }
-
     private void logIn(String input) {
         if (input.length() < 2) {
             return;
         }
         String userName = input.substring(2);
-        if (!userDict.containsKey(userName)) {
-            ArrayList<Calendar> calendar = new ArrayList<Calendar>();
-            userDict.put(userName, calendar);
+        Boolean userFound = false;
+        for (User u : userDict.keySet()) {
+            if (u.getName() == userName) {
+                currentUser = u;
+                userFound = true;
+            }
         }
-        currentUser = userName;
+        if (!userFound) {
+            User user = new User(userName);
+            ArrayList<Calendar> calendar = new ArrayList<Calendar>();
+            userDict.put(user, calendar);
+            currentUser = user;
+        }
     }
 
     private void addCalendar(String input) {
         if (input.length() < 2) {
             return;
         }
-        if (currentUser == "") {
+        if (currentUser == null) {
             System.out.println("Log in first");
             return;
         }
         String calendarName = input.substring(2);
         Calendar calendar = new Calendar(calendarName);
-        currentCalendar = calendarName;
+        currentCalendar = calendar;
         userDict.get(currentUser).add(calendar);
     }
 
     private void addEvent(String input) {
-        if (currentCalendar == "") {
+        if (currentCalendar == null) {
             System.out.println("Add calendar first");
             return;
         }
         String eventName = input.substring(2);
         Event event = new Event(eventName);
-        Calendar c = getCalendar(currentCalendar);
-        c.addEvent(event);
+        currentCalendar.addEvent(event);
     }
 
     private void viewAllCalendars() {
-        for (String s : userDict.keySet()) {
-            System.out.println("USER: " + s);
+        for (User s : userDict.keySet()) {
+            System.out.println("USER: " + s.getName());
             for (Calendar c : userDict.get(s)) {
                 System.out.println("CALENDAR: " + c.getName());
                 for (Event e : c.getEvents()) {
@@ -151,8 +142,8 @@ public class CalendarApp {
 
     private void viewCurrentCalendar() {
         for (Calendar c : userDict.get(currentUser)) {
-            if (c.getName() == currentCalendar) {
-                System.out.println("CALENDAR: " + currentCalendar);
+            if (c == currentCalendar) {
+                System.out.println("CALENDAR: " + currentCalendar.getName());
                 for (Event e : c.getEvents()) {
                     System.out.println("EVENT: " + e.getName());
                 }
