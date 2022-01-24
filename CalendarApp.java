@@ -5,6 +5,9 @@
 // import java.util.HashMap;
 import java.util.*;
 /*
+    INSTRUCTIONS:
+    - When adding event, enter date and time as "yyyy-MM-dd hh:mm:ss"
+
     >> How to use timestamp
     Timestamp ts = new Timestamp(System.currentTimeMillis());
     String s = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(ts);
@@ -16,23 +19,20 @@ import java.util.*;
 */
 
 public class CalendarApp {
-
     private HashMap<User, ArrayList<Calendar>> userDict;
-    // private String currentUser;
-    // private String currentCalendar;
     private User currentUser;
     private Calendar currentCalendar;
-
+    private String cmd;
     private static final String CMD_PROMPT = String.join("\n",
             "\n----------------------------------",
             "COMMANDS:",
             "Log In = 1 *name*",
             "Add Calendar = 2 *calendar name*",
             "Add Event = 3 *event name*",
-            "View Calendar = 4",
+            "View All Calendars = 4",
+            "View Current Calendar = 5",
             "----------------------------------\n",
             ">>>> ");
-    private String cmd;
 
     public CalendarApp() {
         userDict = new HashMap<User, ArrayList<Calendar>>();
@@ -44,35 +44,38 @@ public class CalendarApp {
         Boolean loop = true;
         while (loop) {
             String input = getInput();
-            if (input.length() == 0) { // break out of input loop
-                break;
-            }
-            cmd = input.substring(0, 1);
-            switch (cmd) {
-                case "1":
-                    logIn(input);
-                    break;
+            if (input.length() != 0) {
+                cmd = input.substring(0, 1);
+                switch (cmd) {
+                    case "1":
+                        logIn(input);
+                        break;
 
-                case "2":
-                    addCalendar(input);
-                    break;
+                    case "2":
+                        addCalendar(input);
+                        break;
 
-                case "3":
-                    addEvent(input);
-                    break;
+                    case "3":
+                        addEvent(input);
+                        break;
 
-                case "4":
-                    viewAllCalendars();
-                    break;
+                    case "4":
+                        viewAllCalendars();
+                        break;
 
-                case "5":
-                    viewCurrentCalendar();
-                    break;
+                    case "5":
+                        viewCurrentCalendar();
+                        break;
 
-                default:
-                    System.out.println("\nQUITTING\n");
-                    loop = false;
-                    break;
+                    case "q":
+                        System.out.println("\nQUITTING\n");
+                        loop = false;
+                        break;
+
+                    default:
+                        System.out.println("\nNVALID INPUT\n");
+                        break;
+                }
             }
         }
     }
@@ -91,7 +94,9 @@ public class CalendarApp {
         String userName = input.substring(2);
         Boolean userFound = false;
         for (User u : userDict.keySet()) {
-            if (u.getName() == userName) {
+            System.out.println("userName; " + userName);
+            System.out.println("name; " + u.getName());
+            if (u.getName().equals(userName)) {
                 currentUser = u;
                 userFound = true;
             }
@@ -123,14 +128,22 @@ public class CalendarApp {
             System.out.println("Add calendar first");
             return;
         }
+        if (input.length() < 2) {
+            return;
+        }
         String eventName = input.substring(2);
-        Event event = new Event(eventName);
+        System.out.print("ENTER START DATE\n>>>>");
+        String startDate = System.console().readLine();
+        System.out.print("ENTER END DATE\n>>>>");
+        String endDate = System.console().readLine();
+
+        Event event = new Event(eventName, startDate, endDate);
         currentCalendar.addEvent(event);
     }
 
     private void viewAllCalendars() {
         for (User s : userDict.keySet()) {
-            System.out.println("USER: " + s.getName());
+            System.out.println("\nUSER: " + s.getName());
             for (Calendar c : userDict.get(s)) {
                 System.out.println("CALENDAR: " + c.getName());
                 for (Event e : c.getEvents()) {
@@ -146,6 +159,9 @@ public class CalendarApp {
                 System.out.println("CALENDAR: " + currentCalendar.getName());
                 for (Event e : c.getEvents()) {
                     System.out.println("EVENT: " + e.getName());
+                    System.out.println("START DATE: " + e.getStartDate());
+                    System.out.println("EVENT DATE: " + e.getEndDate());
+
                 }
             }
         }

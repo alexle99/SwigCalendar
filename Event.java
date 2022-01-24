@@ -6,16 +6,15 @@ import java.util.ArrayList;
 
 class Event {
     private String name;
-    private String startTime;
-    private String endTime;
+    private String startDate;
+    private String endDate;
     private ArrayList<String> guests;
     private Boolean repeat;
 
-    // public Event(String n, String startT, String endT) {
-    public Event(String n) {
+    public Event(String n, String startT, String endT) {
         name = n;
-        startTime = "yyyy-mm-dd hh:mm:ss";
-        endTime = "yyyy-mm-dd hh:mm:ss";
+        startDate = startT;
+        endDate = endT;
         guests = new ArrayList<String>();
         repeat = false;
     }
@@ -28,20 +27,20 @@ class Event {
         return name;
     }
 
-    public void setStartTime(String d) {
-        startTime = d;
+    public void setStartDate(String d) {
+        startDate = d;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setEndTime(String d) {
-        endTime = d;
+    public void setEndDate(String d) {
+        endDate = d;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getEndDate() {
+        return endDate;
     }
 
     public void addGuest(String guest) {
