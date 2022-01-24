@@ -136,7 +136,6 @@ public class CalendarApp {
         String startDate = System.console().readLine();
         System.out.print("ENTER END DATE\n>>>>");
         String endDate = System.console().readLine();
-
         Event event = new Event(eventName, startDate, endDate);
         currentCalendar.addEvent(event);
     }
