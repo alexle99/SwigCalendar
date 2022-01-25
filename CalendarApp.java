@@ -31,6 +31,8 @@ public class CalendarApp {
             "Add Event = 3 *event name*",
             "View All Calendars = 4",
             "View Current Calendar = 5",
+            "Remove Calendar = 6",
+            "Remove Event = 7",
             "----------------------------------\n",
             ">>>> ");
 
@@ -65,6 +67,14 @@ public class CalendarApp {
 
                     case "5":
                         viewCurrentCalendar();
+                        break;
+
+                    case "6":
+                        removeCalendar(input);
+                        break;
+
+                    case "7":
+                        removeEvent(input);
                         break;
 
                     case "q":
@@ -138,6 +148,28 @@ public class CalendarApp {
         String endDate = System.console().readLine();
         Event event = new Event(eventName, startDate, endDate);
         currentCalendar.addEvent(event);
+    }
+
+    private void removeCalendar(String input) {
+
+    }
+
+    private void removeEvent(String input) {
+        if (currentCalendar == null) {
+            System.out.println("Add calendar first");
+            return;
+        }
+        if (input.length() < 2) {
+            return;
+        }
+        String eventName = input.substring(2);
+        for (Calendar c : userDict.get(currentUser)) {
+            for (Event e : c.getEvents()) {
+                if (e.getName().equals(eventName)) {
+                    c.removeEvent(eventName);
+                }
+            }
+        }
     }
 
     private void viewAllCalendars() {

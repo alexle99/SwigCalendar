@@ -24,6 +24,14 @@ public class Calendar {
         events.add(e);
     }
 
+    public void removeEvent(String event) {
+        for (Event e : events) {
+            if (e.getName() == event) {
+                events.remove(e);
+            }
+        }
+    }
+
     public ArrayList<Event> getEvents() {
         return events;
     }
